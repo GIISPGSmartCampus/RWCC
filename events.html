@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RWCC 2025 - Events</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --rwcc-blue: #2196F3;
+    --rwcc-orange: #FF9800;
+    --rwcc-green: #8BC34A;
+    --rwcc-red: #E53935;
+    --text-dark: #222;
+    --text-light: #7F8C8D;
+    --bg-light: #F5F7FA;
+    --white: #FFF;
+    --shadow: 0 4px 20px rgba(33,150,243,0.08);
+    --shadow-hover: 0 8px 30px rgba(33,150,243,0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: var(--bg-light);
+    }
+
+    header{
+      background: linear-gradient(120deg, var(--rwcc-blue) 30%, var(--rwcc-orange) 70%);
+      color: white;
+      padding: 2rem 1rem;
+      position: relative;
+    }
+    
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .nav-toggle {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+
+    .nav-menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 70px;
+      left: 20px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .nav-menu a {
+      padding: 10px 15px;
+      color: var(--rwcc-blue);
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s, color 0.3s;
+      border-radius: 0;
+    }
+
+    .nav-menu a:hover, .nav-menu a.active {
+      background: var(--rwcc-orange);
+      color: #fff;
+    }
+
+    .show-menu {
+      display: flex;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--white);
+      font-family: 'Orbitron', monospace;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 3rem 0;
+      background-color: var(--bg-light);
+      min-height: calc(100vh - 200px);
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .event-card {
+      background: var(--white);
+      padding: 2rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .event-card:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .event-card[data-color="red"]:hover {
+      background-color: var(--rwcc-red);
+      border-color: var(--rwcc-red);
+    }
+    .event-card[data-color="green"]:hover {
+      background-color: var(--rwcc-green);
+      border-color: var(--rwcc-green);
+    }
+    .event-card[data-color="orange"]:hover {
+      background-color: var(--rwcc-orange);
+      border-color: var(--rwcc-orange);
+    }
+    .event-card[data-color="blue"]:hover {
+      background-color: var(--rwcc-blue);
+      border-color: var(--rwcc-blue);
+    }
+
+    .event-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .event-card:hover h3 {
+      color: white;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color:linear-gradient(120deg, var(--rwcc-blue) 30%, var(--rwcc-orange) 70%);
+      backdrop-filter: blur(5px);
+    }
+
+    .overlay-content {
+      background-color: white;
+      margin: 2% auto;
+      padding: 0;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 95vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--text-dark);
+      background: rgba(255,255,255,0.9);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .close:hover {
+      background: var(--rwcc-red);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .event-details {
+      padding: 4.5rem 2rem 2rem; /* Increased top padding from 3rem to 4.5rem */
+      padding-right: 240px;
+    }
+
+    .event-details h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .event-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .event-meta ul {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+      padding-left: 1.5em;
+    }
+    .event-meta li {
+      margin-bottom: 0.4em;
+      line-height: 1.6;
+    }
+
+    .meta-item {
+      background: var(--bg-light);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      color: var(--rwcc-orange);
+      font-weight: 600;
+    }
+
+    .section {
+      margin-bottom: 1.5rem;
+    }
+
+    .section h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: var(--rwcc-blue);
+    }
+
+    .registration-link {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--rwcc-blue), var(--rwcc-orange));
+      color: white;
+      padding: 0.8rem 2rem;
+      text-decoration: none;
+      border-radius: 25px;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .registration-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(33,150,243,0.18);
+      background: var(--rwcc-orange);
+      color: #fff;
+    }
+
+    .event-logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 200px;
+      height: auto;
+      z-index: 5;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 4px;
+    }
+
+    .header-logo {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      width: 250px;
+      height: auto;
+      z-index: 20;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .header-logo {
+        position: static;
+        display: block;
+        margin: 0 auto 1rem auto;
+        width: 80vw;
+        max-width: 320px;
+        height: auto;
+        top: unset;
+        right: unset;
+      }
+      header .container {
+        padding-top: 0;
+      }
+    }
+
+    .nav-menu {
+      display: none;
+      /* ... */
+    }
+    .show-menu {
+      display: flex;
+    }
+
+    .buttons-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    <nav class="nav-menu" id="navMenu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="events.html">Events</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <img src="giis-logo.png" alt="GIIS Logo" class="header-logo">
+    <div class="container">
+      <h1>RWCC 3.0</h1>
+      <p class="subtitle">Real World Challenges Convention</p>
+    </div>
+  </header>
+
+  <main>
+        <div class="container">
+            <div class="events-grid">
+                <!-- Event Cards -->
+                <div class="event-card" onclick="openOverlay('event1')" data-color="red">
+                    <h3>Li'l Mavericks</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event2')" data-color="green">
+                    <h3>SMART Strokes for Young Folks</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event3')" data-color="orange">
+                    <h3>Opus for NextGen Intelligence</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event4')" data-color="blue">
+                    <h3>AdZapp: Ideas that Dare</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event5')" data-color="red">
+                    <h3>From Vision to Venture: Entrepreneur Challenge</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event6')" data-color="green">
+                    <h3>Educators' Perspective</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event7')" data-color="orange">
+                    <h3>A Valuable Bond</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event8')" data-color="blue">
+                    <h3>Wellness Wave</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event9')" data-color="red">
+                    <h3>Transformation Turncoat</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event10')" data-color="green">
+                    <h3>Student Conference</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event11')" data-color="orange">
+                    <h3>Battle of the Bots</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event12')" data-color="blue">
+                    <h3>Global Create-a-thon</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event13')" data-color="red">
+                    <h3>Global MedCon</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event14')" data-color="green">
+                    <h3>Global Law Summit</h3>
+                </div>
+
+                <div class="event-card" onclick="openOverlay('event15')" data-color="orange">
+                    <h3>Thought Leadership: A Dialogue</h3>
+                </div>
+            </div>
+        </div>
+    </main>
+
+  <div class="overlay" id="overlay">
+    <div class="overlay-content" id="overlay-content"></div>
+  </div>
+
+    <script>
+        const events = {
+            event1: {
+                title: "Li'l Mavericks",
+                description: [
+                "Participation: Team",
+                "Category: KG & LP",
+                "Number of Teams: 1 team per category",
+                "Team Size: 2 to 5 participants per team",
+                "Time Limit: 3 minutes per team",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode of Judgement: Pre-Judged"],
+                link: "https://forms.gle/mAHvjPbd6MusqtRm9",
+                image: "images/event1.png"
+            },
+            event2: {
+                title: "SMART Strokes for Young Folks",
+                description: [
+                "Participation: Individual",
+                "Category: LP & UP",
+                "Number of Entries: 2 entries per category",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode: Pre-Judged"],
+                link: "https://forms.gle/eEqs8UiaVBUh9Dfm6",
+                image: "images/event2.png"
+            },
+            event3: {
+                title: "Opus for NextGen Intelligence",
+                description: [
+                "Participation: Team",
+                "Category: UP & MS",
+                "Number of Teams: 1 team per category",
+                "2 to 5 participants per team",
+                "Time Limit: Up to 3 minutes per team",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode of Judgement: Pre-Judged"],
+                link: "https://forms.gle/iGqSgaD47YLWpRFCA",
+                image: "images/event3.png"
+            },
+            event4: {
+                title: "AdZapp: Ideas that Dare",
+                description: [
+                "Participation: Team",
+                "Category: MS & SEC",
+                "Number of Teams: 1 team per category",
+                "3 participants per team",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode of Judgement: Pre-Judged"],
+                link: "https://forms.gle/XiGGCpEG1jC8969d7",
+                image: "images/event4.png"
+            },
+            event5: {
+                title: "From Vision to Venture:\n" + "\nEntrepreneur Challenge",
+                description: [
+                "Participation Type: Individual or Team",
+                "Category: SEC & SNR",
+                "Number of Teams: 1 team per category",
+                "3 participants per team",
+                "Individual Participants: Maximum 2 individual participants per category",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode of Judgement: Pre-Judged"],
+                link: "https://forms.gle/EHjAkctGkCSq3EVd6",
+                image: "images/event5.png"
+            },
+            event6: {
+                title: "Educators' Perspective",
+                description: [
+                "Participation: Individual",
+                "Category: TCH",
+                "Number of Entries: 2 individual entries per school (2 essays and/or 2 artwork)",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode of Judgement: Pre-Judged"],
+                link: "https://forms.gle/G5L3s9D6bqbziamH8",
+                image: "images/event6.png"
+            },
+            event7: {
+                title: "A Valuable Bond",
+                description: [
+                "Participation: Parents",
+                "Category: PNT",
+                "Number of Entries: 2 entries per school",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode of Judgement: Pre-Judged"],
+                link: "https://forms.gle/iWg8KacF2VrAVjMz7",
+                image: "images/event7.png"
+            },
+            event8: {
+                title: "Wellness Wave",
+                description: [
+                "Participation: Individual",
+                "Category: SNR, PNT, TCH",
+                "Number of Entries: 2 entries per campus in total",
+                "Date of Submission: Friday, 24th October 2025",
+                "Mode of Judgement: Pre-judged"],
+                link: "https://forms.gle/72h3i2XKkXqx1wyB7",
+                image: "images/event8.png"
+            },
+            event9: {
+                title: "Transformation Turncoat",
+                description: [
+                "Participation Type: Individual",
+                "Category: MS & SEC",
+                "Number of Participants: 2 participants per category",
+                "Time Limit: 2 minutes per participant",
+                "Mode: On site at GIIS Smart Campus",],
+                link: "https://forms.gle/Tk6YduHgwzwxgxsc6",
+                image: "images/event9.png"
+            },
+            event10: {
+                title: "Student Conference",
+                description: [
+                "Participation: Team",
+                "Category: SEC",
+                "Number of Participants: 6 participants per school",
+                "Speakers per Country: 2 speakers",
+                "Time Limit: 4 minutes per country",
+                "Topic: The use of AI in tackling climate change"],
+                link: "https://forms.gle/P7s3oQR4Gp5dQ9997",
+                image: "images/event10.png"
+            },
+            event11: {
+                title: "Battle of the Bots",
+                description: [
+                "Participation: Team of 3–4 members",
+                "Category: SEC, SNR",
+                "Number of Entries: No limit",
+                "Mode: On site at GIIS SMART Campus"],
+                link: "https://forms.gle/BBFaeb6HgkJgeLh76",
+                image: "images/event11.png"
+            },
+            event12: {
+                title: "Global Create-a-thon",
+                description: [
+                "Participation: Team (participants can register individually; teams can be formed on site)",
+                "Category: SEC, SNR",
+                "Number of Entries: No limit",
+                "Mode: On site at GIIS SMART Campus"],
+                link: "https://forms.gle/pcPUx7cFX8iuNKSG7",
+                image: "images/event12.png"
+            },
+            event13: {
+                title: "Global MedCon",
+                description: [
+                "Participation: Individual",
+                "Category: SEC, SNR",
+                "Number of Entries: No limit",
+                "Mode: On site at GIIS SMART Campus"],
+                link: "https://forms.gle/X11RxXv9HUvzdQqi8",
+                image: "images/event13.png"
+            },
+            event14: {
+                title: "Global Law Summit",
+                description: [
+                "Participation: Individual",
+                "Category: SEC, SNR",
+                "Number of Entries: No limit",
+                "Mode: On site at GIIS SMART Campus"],
+                link: "https://forms.gle/KKdAELVudNvkHBWu9",
+                image: "images/event14.png"
+            },
+            event15: {
+                title: "Thought Leadership: A Dialogue",
+                description: [
+                "Participation: Individual",
+                "Category: AL (Academic Leaders)",
+                "Number of Registrations: 1 participant per campus",
+                "Mode: On Site at GIIS SMART Campus"],
+                link: "https://forms.gle/ri4i31UBJzLrmWuQ7",
+                image: "images/event15.png"
+            }
+        };
+
+        function toggleMenu() {
+          const navMenu = document.getElementById('navMenu');
+          navMenu.classList.toggle('show-menu');
+        }
+
+        function openOverlay(eventId) {
+            const event = events[eventId];
+            const overlay = document.getElementById('overlay');
+            const overlayContent = document.getElementById('overlay-content');
+            const logoImg = `<img src="giis-logo.png" alt="GIIS Logo" class="event-logo">`;
+            
+            const registrationButton = event.link !== '#' ? 
+                `<a href="${event.link}" class="registration-link" target="_blank">Register Now</a>` : 
+                '<p style="color: #7f8c8d; font-style: italic;">Registration details will be announced soon</p>';
+            
+            const imageButton = event.image ? 
+              `<a href="${event.image}" class="registration-link" target="_blank">View Poster</a>` : '';
+
+            let descriptionHtml = '';
+            if (Array.isArray(event.description)) {
+                descriptionHtml = `<ul style="margin-left:1.2em;">${event.description.map(item => `<li>${item}</li>`).join('')}</ul>`;
+            } else {
+                descriptionHtml = `<p>${event.description || ''}</p>`;
+            }
+
+            overlayContent.innerHTML = `
+              <button class="close" onclick="closeOverlay()">&times;</button>
+              ${logoImg}
+              <div class="event-details">
+                  <h2 style="color: var(--rwcc-blue);">${event.title}</h2>
+                  <div class="event-meta">
+                    <h3 style="color: var(--rwcc-blue);">Description</h3>
+                    ${descriptionHtml}
+                  </div>
+                  <div class="section buttons-row">
+                    ${registrationButton}${imageButton}
+                  </div>
+              </div>
+          `;
+            
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeOverlay() {
+            document.getElementById('overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close overlay when clicking outside the content
+        document.getElementById('overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeOverlay();
+            }
+        });
+
+        // Close overlay with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeOverlay();
+            }
+        });
+    </script>
+</body>
+</html>
